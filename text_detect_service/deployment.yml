@@ -1,0 +1,35 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: video-website-text-detect-s
+  labels:
+    app: video-website-text-detect-s
+spec:
+  selector:
+    app: video-website-text-detect-d
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
+
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: video-website-text-detect-d
+spec:
+  selector:
+    matchLabels:
+      app: video-website-text-detect-d
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: video-website-text-detect-d
+    spec:
+      containers:
+      - name: video-website-text-detect-d
+        image: gcr.io/cc-isv/text-detect:v1
+        ports:
+        - containerPort: 5000
