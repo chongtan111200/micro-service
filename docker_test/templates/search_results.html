@@ -1,0 +1,66 @@
+<!doctype html>
+<head>
+    <title>Video Search</title>
+    <link rel="stylesheet" href="../../static/css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Viga" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="../../static/js/main_search.js"></script>
+</head>
+<body>
+  <div id="top-search">
+      <h1><a href='/'>Video Search</a></h1>
+      <form id='upload-form' action="/search" method="POST" onsubmit="return checkFile()" enctype="multipart/form-data">
+          <input class="border clickable" id='upload-file' type="file" name="video" accept="video/*" required>
+          <input class="button" type="submit" value="Search">
+      </form>
+  </div>
+  <div class='notifications'>
+      <div id='notification'></div>
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+            <p>{{ message }}</p>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+  </div>
+
+  <div id="results">
+      <p>26 Results for {{ filename }}</p>
+      <div id="source">
+      </div>
+
+      <div id="tags">
+      </div>
+
+      <div id="object-labels">
+      </div>
+
+      <div id="similar-videos">
+      </div>
+
+      <div id="suggested-friends">
+      </div>
+  </div>
+  <script>
+    $(document).ready(function() {
+      var file_name = '{{ filename }}'; // not very sure how to get the file name
+      console.log("started");
+      var dat = {filename:file_name};
+      $.ajax({
+          url: '{{ url_for('get_other') }}', // call back to the frontend only
+          data : JSON.stringify(dat),
+          contentType : 'application/json',
+          type: 'POST',
+          success: function(response) {
+              console.log(typeof response);
+              $('#object-labels').html(response);
+          },
+          error: function(error) {
+              console.log(error);
+          }
+      });
+    });
+  </script>
+  </script>
+</body>

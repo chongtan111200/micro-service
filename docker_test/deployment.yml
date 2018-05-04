@@ -1,0 +1,36 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: video-website-frontend
+  labels:
+    app: video-website-frontend
+spec:
+  selector:
+    app: video-website-frontend-d
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
+  type: LoadBalancer
+
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: video-website-frontend-d
+spec:
+  selector:
+    matchLabels:
+      app: video-website-frontend-d
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: video-website-frontend-d
+    spec:
+      containers:
+      - name: video-website-frontend-d
+        image: gcr.io/cc-isv/5412-frontend:v5
+        ports:
+        - containerPort: 5000
