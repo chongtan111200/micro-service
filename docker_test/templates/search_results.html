@@ -39,6 +39,9 @@
       <p>recognized people</p>
       <div id="res_people">
       </div>
+      <p>similar videos</p>
+      <div id="res_similar_videos">
+      </div>
   </div>
   <script>
     $(document).ready(function() {
@@ -58,6 +61,7 @@
               $('#res_labels').html(res[1]);
               $('#res_text').html(res[2]);
               $('#res_people').html(res[3]);
+              $('#res_similar_videos').html(res[4]);
           },
           error: function(error) {
               console.log(error);

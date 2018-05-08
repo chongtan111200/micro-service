@@ -4,6 +4,8 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 from google.cloud import storage
 import requests
+import redis
+
 
 MAX_UPLOAD_SIZE_MB = 100
 MAX_UPLOAD_SIZE = MAX_UPLOAD_SIZE_MB * 1024 * 1024
@@ -16,7 +18,7 @@ app.config['MAX_CONTENT_LENGTH'] = MAX_UPLOAD_SIZE_MB * 1024 * 1024
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
-@app.route("/")
+@app.route("/", methods=['GET'])
 def main_search():
     return render_template('main_search.html')
 
@@ -101,6 +103,7 @@ def get_other():
     # call other microservices
     data = request.get_json()
     uploaded_video_name = data['filename']
+    r = redis.StrictRedis(host='10.39.243.174', port=6379, db=0)
 
     # extract the images
     url_extract_img = 'http://10.39.243.238:80'
@@ -112,12 +115,18 @@ def get_other():
     url_labels = 'http://10.39.252.221:80'
     res_labels = requests.post(url_labels, json=data, headers=headers)
 
+    similar_video = r.get(str(res_labels.text))
+    if not similar_video:
+        res_similar_videos = "Not Found"
+    else:
+        res_similar_videos = similar_video
+
     url_text_detect = 'http://10.39.252.215:80'
     res_text = requests.post(url_text_detect, json=data, headers=headers)
 
     url_people_recog = 'http://10.39.246.101:80'
     res_people = requests.post(url_people_recog, json=data, headers=headers)
-    res = res_img.text + '::' + res_labels.text + '::' + res_text.text + '::' + res_people.text
+    res = res_img.text + '::' + res_labels.text + '::' + res_text.text + '::' + res_people.text + '::' + res_similar_videos
     return str(res)
 
 app.secret_key = '\x1d%oW\x81w\xefH\xbf\xb6\xb0\xd3\xd6_?\x8f\x8b,\xd7\xaa;\xbc/\xd4' #this line is so we can use sessions, which is neccessary for flashes to work
