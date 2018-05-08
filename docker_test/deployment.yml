@@ -31,6 +31,6 @@ spec:
     spec:
       containers:
       - name: video-website-frontend-d
-        image: gcr.io/cc-isv/5412-frontend:v5
+        image: gcr.io/cc-isv/5412-frontend:v8
         ports:
         - containerPort: 5000

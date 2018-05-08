@@ -26,20 +26,18 @@
   </div>
 
   <div id="results">
-      <p>26 Results for {{ filename }}</p>
-      <div id="source">
+      <p>Results for {{ filename }}</p>
+      <p>extracted images uploaded</p>
+      <div id="res_img">
       </div>
-
-      <div id="tags">
+      <p>object labels</p>
+      <div id="res_labels">
       </div>
-
-      <div id="object-labels">
+      <p>extracted text</p>
+      <div id="res_text">
       </div>
-
-      <div id="similar-videos">
-      </div>
-
-      <div id="suggested-friends">
+      <p>recognized people</p>
+      <div id="res_people">
       </div>
   </div>
   <script>
@@ -54,7 +52,12 @@
           type: 'POST',
           success: function(response) {
               console.log(typeof response);
-              $('#object-labels').html(response);
+              var res = response.split("::");
+
+              $('#res_img').html(res[0]);
+              $('#res_labels').html(res[1]);
+              $('#res_text').html(res[2]);
+              $('#res_people').html(res[3]);
           },
           error: function(error) {
               console.log(error);

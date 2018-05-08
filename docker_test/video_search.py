@@ -114,7 +114,10 @@ def get_other():
 
     url_text_detect = 'http://10.39.252.215:80'
     res_text = requests.post(url_text_detect, json=data, headers=headers)
-    res = res_img.text + ' ' + res_labels.text + ' ' + res_text.text
+
+    url_people_recog = 'http://10.39.246.101:80'
+    res_people = requests.post(url_people_recog, json=data, headers=headers)
+    res = res_img.text + '::' + res_labels.text + '::' + res_text.text + '::' + res_people.text
     return str(res)
 
 app.secret_key = '\x1d%oW\x81w\xefH\xbf\xb6\xb0\xd3\xd6_?\x8f\x8b,\xd7\xaa;\xbc/\xd4' #this line is so we can use sessions, which is neccessary for flashes to work
