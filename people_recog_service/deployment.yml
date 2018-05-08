@@ -1,0 +1,35 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: video-website-people-recog-s
+  labels:
+    app: video-website-people-recog-s
+spec:
+  selector:
+    app: video-website-people-recog-d
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
+
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: video-website-people-recog-d
+spec:
+  selector:
+    matchLabels:
+      app: video-website-people-recog-d
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: video-website-people-recog-d
+    spec:
+      containers:
+      - name: video-website-people-recog-d
+        image: gcr.io/cc-isv/people-recog:v1
+        ports:
+        - containerPort: 5000
